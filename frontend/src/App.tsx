@@ -5,6 +5,7 @@ import LandingPage from "./pages/LandingPage";
 import Dashboard from "./pages/Dashboard";
 import MainPage from "./pages/MainPage";
 import PreviewPage from "./pages/PreviewPage";
+import Footer from "./components/Footer";
 function App() {
   return (
     <BrowserRouter>
@@ -16,6 +17,7 @@ function App() {
         <Route path="/generate" element={<MainPage />} />
         <Route path="/preview" element={<PreviewPage />} />
       </Routes>
+      <Footer/>
     </BrowserRouter>
   );
 }
