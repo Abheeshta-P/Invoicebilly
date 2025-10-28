@@ -1,4 +1,5 @@
 import InvoiceForm from "@/components/InvoiceForm";
+import TemplateGrid from "@/components/TemplateGrid";
 import { AppContext } from "@/context/AppContext";
 import { Pencil } from "lucide-react";
 import { useContext, useState } from "react";
@@ -21,7 +22,7 @@ function MainPage() {
   };
 
   return (
-    <div className="container-fluid bg-light min-vh-100 py-4">
+    <div className="mainpage container-fluid bg-light min-vh-100 py-4">
       <div className="container">
         {/* Title bar */}
         <div className="bg-white border rounded shadow-sm p-3 mb-4">
@@ -56,7 +57,7 @@ function MainPage() {
           </div>
           <div className="col-12 col-lg-6 d-flex">
             <div className="bg-white border rounded shadow-sm p-4 w-100">
-              Template grid
+              <TemplateGrid />
             </div>
           </div>
         </div>

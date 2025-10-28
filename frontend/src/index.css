@@ -18,6 +18,7 @@
   animation: spin 1s linear infinite;
 }
 
+.mainpage input:focus ,
 .invoiceform input:focus,
 .invoiceform textarea:focus,
 .invoiceform select:focus {
@@ -40,4 +41,12 @@
 
 .text-primary {
   color: #01406e !important;
+}
+
+.border-dashed {
+  border-style: dashed !important; /* Use !important to override Bootstrap's solid border */
+}
+
+.border-primary {
+  border-color: #01406e !important;
 }
