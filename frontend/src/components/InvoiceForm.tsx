@@ -1,7 +1,10 @@
+import { AppContext } from "@/context/AppContext";
 import ImageUploader from "@/utils/ImageUploader"
 import { Trash2 } from "lucide-react";
+import { useContext } from "react";
 
 function InvoiceForm() {
+  const { invoieData, setInvoiceData } = useContext(AppContext);
   return (
     <div className="invoiceform container py-4">
       {/* logo */}
@@ -170,57 +173,61 @@ function InvoiceForm() {
       {/* item details */}
       <div className="mb-5">
         <h5>Item Details</h5>
-        <div className="card p-3 mb-3">
-          <div className="row g-3 mb-2">
-            <div className="col md-3">
-              <input
-                type="text"
-                className="form-control"
-                name=""
-                id=""
-                placeholder="Item Name"
-              />
+        {invoieData.items.map((_item, _index) => (
+          <div className="card p-3 mb-3">
+            <div className="row g-3 mb-2">
+              <div className="col md-3">
+                <input
+                  type="text"
+                  className="form-control"
+                  name=""
+                  id=""
+                  placeholder="Item Name"
+                />
+              </div>
+              <div className="col md-3">
+                <input
+                  type="number"
+                  name=""
+                  id=""
+                  placeholder="Quantity"
+                  className="form-control"
+                />
+              </div>
+              <div className="col md-3">
+                <input
+                  type="number"
+                  name=""
+                  id=""
+                  placeholder="Amount"
+                  className="form-control"
+                />
+              </div>
+              <div className="col md-3">
+                <input
+                  type="number"
+                  name=""
+                  id=""
+                  placeholder="Total"
+                  className="form-control"
+                />
+              </div>
             </div>
-            <div className="col md-3">
-              <input
-                type="number"
+            <div className="d-flex gap-2">
+              <textarea
+                className="form-control"
+                placeholder="Description"
                 name=""
                 id=""
-                placeholder="Quantity"
-                className="form-control"
-              />
-            </div>
-            <div className="col md-3">
-              <input
-                type="number"
-                name=""
-                id=""
-                placeholder="Amount"
-                className="form-control"
-              />
-            </div>
-            <div className="col md-3">
-              <input
-                type="number"
-                name=""
-                id=""
-                placeholder="Total"
-                className="form-control"
-              />
+              ></textarea>
+              {invoieData.items.length > 1 && (
+                <button className="btn btn-outline-danger" type="button">
+                  <Trash2 size={18} />
+                </button>
+              )}
             </div>
           </div>
-          <div className="d-flex gap-2">
-            <textarea
-              className="form-control"
-              placeholder="Description"
-              name=""
-              id=""
-            ></textarea>
-            <button className="btn btn-outline-danger" type="button">
-              <Trash2 size={18} />
-            </button>
-          </div>
-        </div>
+        ))}
         <button className="btn btn-primary" type="button">
           Add Item
         </button>
@@ -288,7 +295,12 @@ function InvoiceForm() {
       <div className="mb-5">
         <h5>Notes: </h5>
         <div className="w-100">
-          <textarea name="notes" id="notes" rows={3} className="form-control"></textarea>
+          <textarea
+            name="notes"
+            id="notes"
+            rows={3}
+            className="form-control"
+          ></textarea>
         </div>
       </div>
     </div>
