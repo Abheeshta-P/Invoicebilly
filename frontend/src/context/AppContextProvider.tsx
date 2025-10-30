@@ -10,6 +10,7 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
   const [invoiceTitle, setInvoiceTitle] = useState("New Invoice");
   const [invoiceData, setInvoiceData] = useState(intialInvoiceData);
   const [selectedTemplate, setSelectedTemplate] = useState("template1");
+
   const contextValue = {
     invoiceTitle,
     setInvoiceTitle,
@@ -19,6 +20,7 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
     setSelectedTemplate,
     intialInvoiceData,
   };
+
   return (
     <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
   );

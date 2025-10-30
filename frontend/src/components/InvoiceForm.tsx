@@ -1,310 +1,341 @@
-import { AppContext } from "@/context/AppContext";
-import ImageUploader from "@/utils/ImageUploader"
-import { Trash2 } from "lucide-react";
 import { useContext } from "react";
+import type { IntialInvoiceDataType, InvoiceItem } from "@/const";
+import { AppContext } from "@/context/AppContext";
+import ImageUploader from "@/utils/ImageUploader";
+import { Trash2 } from "lucide-react";
 
 function InvoiceForm() {
-  const { invoieData, setInvoiceData } = useContext(AppContext);
+  const { invoiceData, setInvoiceData } = useContext(AppContext);
+
+  // Add new item
+  const addItem = () => {
+    setInvoiceData((prev) => {
+      const lastItem = prev.items[prev.items.length - 1];
+
+      // if no items yet, allow adding first one
+      if (!lastItem) {
+        return {
+          ...prev,
+          items: [
+            ...prev.items,
+            { name: "", quantity: 0, amount: 0, description: "", total: 0 },
+          ],
+        };
+      }
+
+      // validate only if lastItem exists
+      if (
+        !lastItem.name.trim() ||
+        (lastItem.quantity ?? 0) <= 0 ||
+        (lastItem.amount ?? 0) <= 0
+      ) {
+        alert("Please fill the current item details before adding a new one.");
+        return prev;
+      }
+
+      return {
+        ...prev,
+        items: [
+          ...prev.items,
+          { name: "", quantity: 0, amount: 0, description: "", total: 0 },
+        ],
+      };
+    });
+  };
+
+  // Remove item
+  const removeItem = (index: number) => {
+    setInvoiceData((prev) => ({
+      ...prev,
+      items: prev.items.filter((_, i) => i !== index),
+    }));
+  };
+
+  // Update single item
+  const updateItem = <K extends keyof InvoiceItem>(
+    index: number,
+    field: K,
+    value: InvoiceItem[K]
+  ) => {
+    setInvoiceData((prev) => {
+      const items = prev.items.map((item, i) => {
+        if (i !== index) return item;
+        const updated = { ...item, [field]: value };
+
+        if (field === "quantity" || field === "amount") {
+          const quantity = Number(
+            field === "quantity" ? value : item.quantity ?? 0
+          );
+          const amount = Number(field === "amount" ? value : item.amount ?? 0);
+
+          updated.quantity = quantity;
+          updated.amount = amount;
+          updated.total = quantity * amount;
+        }
+        return updated;
+      });
+      return { ...prev, items };
+    });
+  };
+
+  // Update nested section (company, billing, shipping, invoice)
+  const updateNested = <K extends keyof IntialInvoiceDataType>(
+    section: K,
+    key: keyof IntialInvoiceDataType[K],
+    value: string | number
+  ) => {
+    setInvoiceData((prev) => ({
+      ...prev,
+      [section]: {
+        ...((prev[section] as Record<string, string | number>) || {}),
+        [key]: value,
+      } as IntialInvoiceDataType[K],
+    }));
+  };
+
+  // Copy billing → shipping
+  const copyBillingToShipping = (checked: boolean) => {
+    if (checked) {
+      setInvoiceData((prev) => ({
+        ...prev,
+        shipping: { ...prev.billing },
+      }));
+    } else {
+      setInvoiceData((prev) => ({
+        ...prev,
+        shipping: { name: "", phone: "", address: "" },
+      }));
+    }
+  };
+
+  // Totals
+  const subtotal = invoiceData.items.reduce(
+    (sum, item) => sum + (item.total || 0),
+    0
+  );
+  const taxAmount = (subtotal * (invoiceData.tax || 0)) / 100;
+  const grandTotal = subtotal + taxAmount;
+
   return (
     <div className="invoiceform container py-4">
-      {/* logo */}
+      {/* Company Logo */}
       <div className="mb-5">
-        <h5>Comapny Logo</h5>
+        <h5>Company Logo</h5>
         <ImageUploader />
       </div>
-      {/* info */}
+
+      {/* Company Info */}
       <div className="mb-5">
-        <h5 className="mb-3">Your Company</h5>
+        <h5>Your Company</h5>
         <div className="row g-3">
-          <div className="col-md-6">
-            <input
-              type="text"
-              name=""
-              id=""
-              className="form-control"
-              placeholder="Company name"
-            />
-          </div>
-          <div className="col-md-6">
-            <input
-              type="text"
-              name=""
-              id=""
-              className="form-control"
-              placeholder="Company phone"
-            />
-          </div>
-          <div className="col-md-12">
-            <input
-              type="text"
-              name=""
-              id=""
-              className="form-control"
-              placeholder="Company address"
-            />
-          </div>
+          {Object.entries(invoiceData.company).map(([key, value]) => (
+            <div key={key} className="col-md-4">
+              <input
+                type="text"
+                className="form-control"
+                placeholder={key}
+                value={value as string}
+                onChange={(e) =>
+                  updateNested(
+                    "company",
+                    key as keyof typeof invoiceData.company,
+                    e.target.value
+                  )
+                }
+              />
+            </div>
+          ))}
         </div>
       </div>
-      {/* bill to */}
+
+      {/* Billing Info */}
       <div className="mb-5">
-        <h5 className="mb-3">Bill To</h5>
+        <h5>Bill To</h5>
         <div className="row g-3">
-          <div className="col-md-6">
-            <input
-              type="text"
-              name=""
-              id=""
-              className="form-control"
-              placeholder="Name"
-            />
-          </div>
-          <div className="col-md-6">
-            <input
-              type="text"
-              name=""
-              id=""
-              className="form-control"
-              placeholder="Phone"
-            />
-          </div>
-          <div className="col-md-12">
-            <input
-              type="text"
-              name=""
-              id=""
-              className="form-control"
-              placeholder="Address"
-            />
-          </div>
+          {Object.entries(invoiceData.billing).map(([key, value]) => (
+            <div key={key} className="col-md-4">
+              <input
+                type="text"
+                className="form-control"
+                placeholder={key}
+                value={value as string}
+                onChange={(e) =>
+                  updateNested(
+                    "billing",
+                    key as keyof typeof invoiceData.billing,
+                    e.target.value
+                  )
+                }
+              />
+            </div>
+          ))}
         </div>
       </div>
-      {/* ship to */}
+
+      {/* Shipping Info */}
       <div className="mb-5">
-        <div className="mb-2 d-flex justify-content-between align-items-center">
+        <div className="d-flex justify-content-between align-items-center">
           <h5>Ship To</h5>
           <div className="form-check">
             <input
+              className="form-check-input"
               type="checkbox"
-              name="sameAsBilling"
               id="sameAsBilling"
-              className="form-check-input cursor-pointer"
+              onChange={(e) => copyBillingToShipping(e.target.checked)}
             />
-            <label htmlFor="sameAsBilling" className="form-check-label">
-              Same As Billing
+            <label className="form-check-label" htmlFor="sameAsBilling">
+              Same as Billing
             </label>
           </div>
         </div>
+
         <div className="row g-3">
-          <div className="col-md-6">
-            <input
-              type="text"
-              name=""
-              id=""
-              className="form-control"
-              placeholder="Name"
-            />
-          </div>
-          <div className="col-md-6">
-            <input
-              type="text"
-              name=""
-              id=""
-              className="form-control"
-              placeholder="Phone"
-            />
-          </div>
-          <div className="col-md-12">
-            <input
-              type="text"
-              name=""
-              id=""
-              className="form-control"
-              placeholder="Address"
-            />
-          </div>
+          {Object.entries(invoiceData.shipping).map(([key, value]) => (
+            <div key={key} className="col-md-4">
+              <input
+                type="text"
+                className="form-control"
+                placeholder={key}
+                value={value as string}
+                onChange={(e) =>
+                  updateNested(
+                    "shipping",
+                    key as keyof typeof invoiceData.shipping,
+                    e.target.value
+                  )
+                }
+              />
+            </div>
+          ))}
         </div>
       </div>
-      {/* invoice info */}
+
+      {/* Invoice Info */}
       <div className="mb-5">
-        <h5 className="mb-3">Invoice Information</h5>
+        <h5>Invoice Info</h5>
         <div className="row g-3">
-          {/* Invoice Number */}
-          <div className="col-md-4">
-            <label htmlFor="invoiceNumber" className="form-label">
-              Invoice Number
-            </label>
-            <input
-              type="text"
-              id="invoiceNumber"
-              name="invoiceNumber"
-              disabled
-              className="form-control"
-              placeholder="Invoice Number"
-            />
-          </div>
-
-          {/* Invoice Date */}
-          <div className="col-md-4">
-            <label htmlFor="invoiceDate" className="form-label">
-              Invoice Date
-            </label>
-            <input
-              type="date"
-              id="invoiceDate"
-              name="invoiceDate"
-              className="form-control"
-            />
-          </div>
-
-          {/* Due Date */}
-          <div className="col-md-4">
-            <label htmlFor="dueDate" className="form-label">
-              Due Date
-            </label>
-            <input
-              type="date"
-              id="dueDate"
-              name="dueDate"
-              className="form-control"
-            />
-          </div>
+          {Object.entries(invoiceData.invoice).map(([key, value]) => (
+            <div key={key} className="col-md-4">
+              <input
+                type="text"
+                className="form-control"
+                placeholder={key}
+                value={value as string}
+                onChange={(e) =>
+                  updateNested(
+                    "invoice",
+                    key as keyof typeof invoiceData.invoice,
+                    e.target.value
+                  )
+                }
+              />
+            </div>
+          ))}
         </div>
       </div>
-      {/* item details */}
+
+      {/* Items */}
       <div className="mb-5">
-        <h5>Item Details</h5>
-        {invoieData.items.map((_item, _index) => (
-          <div className="card p-3 mb-3">
+        <h5>Items</h5>
+        {invoiceData.items.map((item, index) => (
+          <div key={index} className="card p-3 mb-3">
             <div className="row g-3 mb-2">
-              <div className="col md-3">
+              <div className="col-md-3">
                 <input
                   type="text"
                   className="form-control"
-                  name=""
-                  id=""
                   placeholder="Item Name"
+                  value={item.name}
+                  onChange={(e) => updateItem(index, "name", e.target.value)}
                 />
               </div>
-              <div className="col md-3">
+              <div className="col-md-3">
                 <input
                   type="number"
-                  name=""
-                  id=""
-                  placeholder="Quantity"
                   className="form-control"
+                  placeholder="Qty"
+                  value={item.quantity || ""}
+                  onChange={(e) =>
+                    updateItem(index, "quantity", Number(e.target.value))
+                  }
                 />
               </div>
-              <div className="col md-3">
+              <div className="col-md-3">
                 <input
                   type="number"
-                  name=""
-                  id=""
+                  className="form-control"
                   placeholder="Amount"
-                  className="form-control"
+                  value={item.amount || ""}
+                  onChange={(e) =>
+                    updateItem(index, "amount", Number(e.target.value))
+                  }
                 />
               </div>
-              <div className="col md-3">
+              <div className="col-md-3">
                 <input
                   type="number"
-                  name=""
-                  id=""
-                  placeholder="Total"
                   className="form-control"
+                  readOnly
+                  placeholder="Total"
+                  disabled
+                  value={item.total || ""}
                 />
               </div>
             </div>
-            <div className="d-flex gap-2">
-              <textarea
-                className="form-control"
-                placeholder="Description"
-                name=""
-                id=""
-              ></textarea>
-              {invoieData.items.length > 1 && (
-                <button className="btn btn-outline-danger" type="button">
-                  <Trash2 size={18} />
-                </button>
-              )}
-            </div>
+
+            <textarea
+              rows={2}
+              className="form-control"
+              placeholder="Description"
+              value={item.description}
+              onChange={(e) => updateItem(index, "description", e.target.value)}
+            />
+
+            {invoiceData.items.length > 1 && (
+              <button
+                className="btn btn-outline-danger mt-2"
+                onClick={() => removeItem(index)}
+                type="button"
+              >
+                <Trash2 size={18} />
+              </button>
+            )}
           </div>
         ))}
-        <button className="btn btn-primary" type="button">
+
+        <button className="btn btn-primary" onClick={addItem} type="button">
           Add Item
         </button>
       </div>
-      {/* bank account info */}
-      <div className="mb-5">
-        <h5 className="mb-3">Bank Account Details</h5>
-        <div className="row g-3">
-          <div className="col-md-4">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Account Name"
-            />
-          </div>
-          <div className="col-md-4">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Account Number"
-            />
-          </div>
-          <div className="col-md-4">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Branch/IFSC Code"
-            />
-          </div>
-        </div>
-      </div>
-      {/* totals */}
+
+      {/* Totals */}
       <div className="mb-5">
         <h5>Totals</h5>
-        <div className="d-flex justify-content-end">
-          <div className="w-100 w-md-50">
-            <div className="d-flex justify-content-between">
-              <span>Subtotal</span>
-              <span>&#8377;{1000.0}</span>
-            </div>
-            <div className="d-flex justify-content-between align-items-center">
-              <label htmlFor="taxInput" className="me-2">
-                Tax Rate(%)
-              </label>
-              <input
-                type="number"
-                name="taxInput"
-                id="taxInput"
-                className="form-control w-50 text-end"
-                placeholder="2"
-              />
-            </div>
-            <div className="d-flex justify-content-between">
-              <span>Tax Amout</span>
-              <span>&#8377;{1000.0}</span>
-            </div>
-            <div className="d-flex justify-content-between fw-bold mt-2 text-success">
-              <span>Grand Total</span>
-              <span>&#8377;{1000.0}</span>
-            </div>
-          </div>
+        <div className="d-flex justify-content-between">
+          <span>Subtotal</span>
+          <span>₹{subtotal.toFixed(2)}</span>
         </div>
-      </div>
-      {/* notes */}
-      <div className="mb-5">
-        <h5>Notes: </h5>
-        <div className="w-100">
-          <textarea
-            name="notes"
-            id="notes"
-            rows={3}
-            className="form-control"
-          ></textarea>
+        <div className="d-flex justify-content-between align-items-center">
+          <label htmlFor="taxInput" className="m-0">
+            Tax (%)
+          </label>
+          <input
+            id="taxInput"
+            type="number"
+            className="form-control w-25 text-end"
+            value={invoiceData.tax}
+            onChange={(e) =>
+              setInvoiceData((p) => ({ ...p, tax: Number(e.target.value) }))
+            }
+          />
+        </div>
+        <div className="d-flex justify-content-between fw-bold text-success mt-2">
+          <span>Grand Total</span>
+          <span>₹{grandTotal.toFixed(2)}</span>
         </div>
       </div>
     </div>
   );
 }
 
-export default InvoiceForm
+export default InvoiceForm;
