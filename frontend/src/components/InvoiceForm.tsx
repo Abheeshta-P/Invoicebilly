@@ -1,8 +1,9 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import type { IntialInvoiceDataType, InvoiceItem } from "@/const";
 import { AppContext } from "@/context/AppContext";
 import ImageUploader from "@/utils/ImageUploader";
 import { Trash2 } from "lucide-react";
+import toast from "react-hot-toast";
 
 function InvoiceForm() {
   const { invoiceData, setInvoiceData } = useContext(AppContext);
@@ -29,7 +30,7 @@ function InvoiceForm() {
         (lastItem.quantity ?? 0) <= 0 ||
         (lastItem.amount ?? 0) <= 0
       ) {
-        alert("Please fill the current item details before adding a new one.");
+        toast.error("Please fill the current item details before adding a new one.");
         return prev;
       }
 
@@ -113,8 +114,21 @@ function InvoiceForm() {
     (sum, item) => sum + (item.total || 0),
     0
   );
-  const taxAmount = (subtotal * (invoiceData.tax || 0)) / 100;
+  const taxAmount = (subtotal * Number(invoiceData.tax || 0)) / 100;
   const grandTotal = subtotal + taxAmount;
+
+  useEffect(() => {
+    if (!invoiceData.invoice.number) {
+      const randomNumber = `INV-${new Date().getFullYear()}-${Math.floor(
+        100000 + Math.random() * 900000
+      )}`;
+      setInvoiceData((prev) => ({
+        ...prev,
+        invoice: { ...prev.invoice, number: randomNumber },
+      }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="invoiceform container py-4">
@@ -123,7 +137,6 @@ function InvoiceForm() {
         <h5>Company Logo</h5>
         <ImageUploader />
       </div>
-
       {/* Company Info */}
       <div className="mb-5">
         <h5>Your Company</h5>
@@ -147,7 +160,6 @@ function InvoiceForm() {
           ))}
         </div>
       </div>
-
       {/* Billing Info */}
       <div className="mb-5">
         <h5>Bill To</h5>
@@ -171,7 +183,6 @@ function InvoiceForm() {
           ))}
         </div>
       </div>
-
       {/* Shipping Info */}
       <div className="mb-5">
         <div className="d-flex justify-content-between align-items-center">
@@ -209,7 +220,6 @@ function InvoiceForm() {
           ))}
         </div>
       </div>
-
       {/* Invoice Info */}
       <div className="mb-5">
         <h5>Invoice Info</h5>
@@ -217,10 +227,16 @@ function InvoiceForm() {
           {Object.entries(invoiceData.invoice).map(([key, value]) => (
             <div key={key} className="col-md-4">
               <input
-                type="text"
+                type={key === "number" ? "text" : "date"}
                 className="form-control"
                 placeholder={key}
                 value={value as string}
+                disabled={key === "number"}
+                min={
+                  key !== "number"
+                    ? new Date().toISOString().split("T")[0]
+                    : undefined
+                }
                 onChange={(e) =>
                   updateNested(
                     "invoice",
@@ -233,7 +249,6 @@ function InvoiceForm() {
           ))}
         </div>
       </div>
-
       {/* Items */}
       <div className="mb-5">
         <h5>Items</h5>
@@ -307,6 +322,35 @@ function InvoiceForm() {
           Add Item
         </button>
       </div>
+      {/* Bank Account Info */}
+      <div className="mb-5">
+        <h5 className="mb-3">Bank Account Details</h5>
+        <div className="row g-3">
+          {Object.entries(invoiceData.account).map(([key, value]) => (
+            <div key={key} className="col-md-4">
+              <input
+                type="text"
+                className="form-control"
+                placeholder={
+                  key === "name"
+                    ? "Account Name"
+                    : key === "number"
+                    ? "Account Number"
+                    : "Branch / IFSC Code"
+                }
+                value={value as string}
+                onChange={(e) =>
+                  updateNested(
+                    "account",
+                    key as keyof typeof invoiceData.account,
+                    e.target.value
+                  )
+                }
+              />
+            </div>
+          ))}
+        </div>
+      </div>
 
       {/* Totals */}
       <div className="mb-5">
@@ -332,6 +376,18 @@ function InvoiceForm() {
         <div className="d-flex justify-content-between fw-bold text-success mt-2">
           <span>Grand Total</span>
           <span>₹{grandTotal.toFixed(2)}</span>
+        </div>
+      </div>
+      {/* notes */}
+      <div className="mb-5">
+        <h5>Notes: </h5>
+        <div className="w-100">
+          <textarea
+            name="notes"
+            id="notes"
+            rows={3}
+            className="form-control"
+          ></textarea>
         </div>
       </div>
     </div>
