@@ -50,3 +50,13 @@
 .border-primary {
   border-color: #01406e !important;
 }
+
+.previewpage .invoice-preview {
+  width: 794px;
+  min-height: 1123px;
+  background-color: #fff;
+  box-shadow: 0 0 8px rgba(0,0,0,0.15);
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}

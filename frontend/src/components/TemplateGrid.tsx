@@ -1,6 +1,7 @@
 import { templates } from "@/assets/assets";
+import type { TemplateKey } from "./InvoicePreview";
 
-function TemplateGrid({ontemplateClick}:{ontemplateClick: (id:string)=>void}) {
+function TemplateGrid({ontemplateClick}:{ontemplateClick: (id:TemplateKey)=>void}) {
   return (
     <div className="row g-3">
       {templates.map(
@@ -9,9 +10,9 @@ function TemplateGrid({ontemplateClick}:{ontemplateClick: (id:string)=>void}) {
           label,
           image,
         }: {
-          id: string;
-          label: string;
-          image: string;
+          id: TemplateKey,
+          label: string,
+          image: string,
         }) => (
           <div className="col-12 col-sm-6 col-lg-4" key={id}>
             <div

@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react";
-import type { IntialInvoiceDataType, InvoiceItem } from "@/const";
+import type { IntialInvoiceDataType, InvoiceItem } from "@/types";
 import { AppContext } from "@/context/AppContext";
-import ImageUploader from "@/utils/ImageUploader";
+import ImageUploader from "@/components/ImageUploader";
 import { Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -387,6 +387,10 @@ function InvoiceForm() {
             id="notes"
             rows={3}
             className="form-control"
+            value={invoiceData.notes}
+            onChange={(e) =>
+              setInvoiceData((p) => ({ ...p, notes: e.target.value }))
+            }
           ></textarea>
         </div>
       </div>

@@ -1,13 +1,14 @@
 import { createContext } from "react";
-import type { IntialInvoiceDataType } from "@/const";
+import type { IntialInvoiceDataType } from "@/types";
+import type { TemplateKey } from "@/components/InvoicePreview";
 
 export type AppContextType = {
   invoiceTitle: string;
   setInvoiceTitle: (title: string) => void;
   invoiceData: IntialInvoiceDataType;
   setInvoiceData: React.Dispatch<React.SetStateAction<IntialInvoiceDataType>>;
-  selectedTemplate: string;
-  setSelectedTemplate: (template: string) => void;
+  selectedTemplate: TemplateKey;
+  setSelectedTemplate: (template: TemplateKey) => void;
 };
 
 export const AppContext = createContext<AppContextType>({

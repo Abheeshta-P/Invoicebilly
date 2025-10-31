@@ -1,13 +1,16 @@
 import InvoiceForm from "@/components/InvoiceForm";
+import type { TemplateKey } from "@/components/InvoicePreview";
 import TemplateGrid from "@/components/TemplateGrid";
 import { AppContext } from "@/context/AppContext";
 import { Pencil } from "lucide-react";
 import { useContext, useState } from "react";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 function MainPage() {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const { invoiceTitle, invoiceData, setInvoiceTitle, setInvoiceData, setSelectedTemplate } = useContext(AppContext);
+  const navigate = useNavigate();
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTitle = e.target.value;
@@ -55,6 +58,10 @@ function MainPage() {
       toast.error("Please complete invoice details.");
       return false;
     }
+    if (!data.logo) {
+      toast.error("Please add logo.");
+      return false;
+    }
 
     // Validate items
     if (!data.items.length) {
@@ -79,12 +86,12 @@ function MainPage() {
     return true; // ✅ All validations passed
   };
 
-  const handleTemplateClick = (id: string): void => {
+  const handleTemplateClick = (id: TemplateKey): void => {
     if (!validateInvoiceData()) return; // stop if invalid
 
     setSelectedTemplate(id);
     toast.success("Template selected successfully!");
-    console.log("Selected Template:", id);
+    navigate("/preview");
   };
 
   

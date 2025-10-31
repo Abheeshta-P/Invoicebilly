@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { AppContext } from "./AppContext";
 import { intialInvoiceData } from "@/const";
+import type { TemplateKey } from "@/components/InvoicePreview";
 
 type AppContextProviderProps = {
   children: ReactNode;
@@ -9,7 +10,7 @@ type AppContextProviderProps = {
 export function AppContextProvider({ children }: AppContextProviderProps) {
   const [invoiceTitle, setInvoiceTitle] = useState("New Invoice");
   const [invoiceData, setInvoiceData] = useState(intialInvoiceData);
-  const [selectedTemplate, setSelectedTemplate] = useState("template1");
+  const [selectedTemplate, setSelectedTemplate] = useState<TemplateKey>("template1");
 
   const contextValue = {
     invoiceTitle,
