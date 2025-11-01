@@ -9,8 +9,15 @@ function Template1({ invoiceData }: TemplateProps ) {
   return (
     <div className="template1 border rounded mx-auto my-4 px-sm-4 py-3 w-100">
       {/* header section */}
-      <div className="row mb-4">
-        <div className="col-md-6 mb-3 mb-md-0">
+      <div className="d-flex justify-content-around mb-4">
+        {invoiceData.logo && (
+          <img
+            src={invoiceData.logo}
+            className="company-logo mb-2"
+            alt="logo"
+          />
+        )}
+        <div className="mb-3 mb-md-0">
           <h2 className="mb-1 company-title">{invoiceData.companyName}</h2>
           <p className="mb-1">{invoiceData.companyAddress}</p>
           <p className="mb-0">Phone: {invoiceData.companyPhone}</p>
@@ -99,7 +106,7 @@ function Template1({ invoiceData }: TemplateProps ) {
       </div>
 
       {/* totals section */}
-      <div className="mb-4">
+      <div className="d-flex justify-content-center gap-5 mb-4">
         <div className="d-flex justify-content-end">
           <div className="p-3 w-100 totals-box" style={{ maxWidth: "300px" }}>
             <span>Sub Total: </span>
@@ -111,13 +118,13 @@ function Template1({ invoiceData }: TemplateProps ) {
               <span>₹{invoiceData.taxAmount.toFixed(2)}</span>
             </div>
           )}
-          <div className="d-flex justify-content-between fw-bold total-highlight">
+          <div className="d-flex gap-2 justify-content-between align-items-center fw-bold total-highlight">
             <span>Total: </span>
             <span>{(invoiceData.total ?? 0).toFixed(2)}</span>
           </div>
         </div>
       </div>
-      
+
       {/* Bank account section */}
       {(invoiceData.accountName ||
         invoiceData.accountNumber ||
@@ -143,8 +150,8 @@ function Template1({ invoiceData }: TemplateProps ) {
             </p>
           )}
         </div>
-        )}
-      
+      )}
+
       {/* Notes section */}
       {invoiceData.notes && (
         <div className="mt-4">

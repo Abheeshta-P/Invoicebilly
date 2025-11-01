@@ -9,19 +9,10 @@ export default function Template2({ invoiceData }: TemplateProps) {
       {/* Title */}
       <h1 className="invoice-heading mb-4">Invoice</h1>
 
-      <div className="d-flex justify-content-between align-items-start w-100 gap-4 flex-wrap">
-        {/* LEFT SIDE – BILLED TO */}
-        <div className="bill-shipping-block">
-          <h3 className="green-heading">Billed To</h3>
-          <p className="bold">{invoiceData.billingName}</p>
-          <p>{invoiceData.billingAddress}</p>
-          <p>{invoiceData.billingPhone}</p>
-        </div>
-
-        {/* RIGHT SIDE – COMPANY + LOGO + INVOICE DETAILS */}
-        <div className="text-end company-container">
+        {/* COMPANY + LOGO + INVOICE DETAILS */}
+        <div className="d-flex flex-column">
           {/* LOGO + COMPANY */}
-          <div>
+          <div className="mb-1">
             {invoiceData.logo && (
               <img
                 src={invoiceData.logo}
@@ -30,27 +21,35 @@ export default function Template2({ invoiceData }: TemplateProps) {
               />
             )}
 
-            <h3 className="company-name">{invoiceData.companyName}</h3>
-            <p>{invoiceData.companyAddress}</p>
-            <p>{invoiceData.companyPhone}</p>
-          </div>
+            <h2 className="company-name">{invoiceData.companyName}</h2>
+            <p className="m-0">{invoiceData.companyAddress}</p>
+            <p className="m-0">{invoiceData.companyPhone}</p>
+        </div>
+        <hr className="mb-4"/>
+          <div className="d-flex justify-content-between align-items-center">
+            {/* LEFT SIDE – BILLED TO */}
+            <div className="bill-shipping-block">
+              <h3 className="green-heading">Billed To</h3>
+              <p className="bold">{invoiceData.billingName}</p>
+              <p>{invoiceData.billingAddress}</p>
+              <p>{invoiceData.billingPhone}</p>
+            </div>
+            {/* INVOICE DETAILS */}
+            <div className="invoice-details">
+              <h3 className="green-heading">Invoice Details</h3>
 
-          {/* INVOICE DETAILS */}
-          <div className="invoice-details mt-3">
-            <h3 className="green-heading">Invoice Details</h3>
-
-            <p>
-              <strong>Invoice #:</strong> {invoiceData.invoiceNumber}
-            </p>
-            <p>
-              <strong>Invoice Date:</strong> {invoiceData.invoiceDate}
-            </p>
-            <p>
-              <strong>Due Date:</strong> {invoiceData.paymentDate}
-            </p>
+              <p>
+                <strong>Invoice #:</strong> {invoiceData.invoiceNumber}
+              </p>
+              <p>
+                <strong>Invoice Date:</strong> {invoiceData.invoiceDate}
+              </p>
+              <p>
+                <strong>Due Date:</strong> {invoiceData.paymentDate}
+              </p>
+            </div>
           </div>
         </div>
-      </div>
 
       {/* ---- ITEMS TABLE ---- */}
       <div className="table-container mt-4">

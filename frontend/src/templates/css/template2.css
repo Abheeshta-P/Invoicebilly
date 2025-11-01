@@ -13,24 +13,6 @@
    HEADER + COMPANY + BILLING
 ------------------------------ */
 
-.top-flex {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-/* LEFT BLOCK - BILLED TO */
-.bill-shipping-block {
-  max-width: 45%;
-}
-
-/* RIGHT BLOCK - COMPANY DETAILS + LOGO */
-.company-container {
-  max-width: 45%;
-  text-align: right;
-}
 
 .company-logo {
   width: 90px;
@@ -39,7 +21,6 @@
 
 .company-name {
   color: #0f7f45;
-  font-size: 20px;
   font-weight: 700;
 }
 
@@ -135,4 +116,8 @@
 .bank-section p,
 .notes-section p {
   margin: 4px 0;
+}
+
+.bill-shipping-block p {
+  margin: 0;
 }

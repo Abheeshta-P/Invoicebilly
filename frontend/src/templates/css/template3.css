@@ -1,0 +1,127 @@
+.template3-container {
+  max-width: 900px;
+  background: #ffffff;
+  padding: 20px 25px;
+  border: 1px solid #dddddd;
+}
+
+/* HEADER */
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  & p {
+    margin: 0;
+  }
+}
+
+.left-header {
+  max-width: 55%;
+}
+
+.t3-logo {
+  width: 80px;
+  margin-bottom: 10px;
+}
+
+.t3-company-name {
+  color: #4a4a4a;
+  margin-top: 5px;
+  font-weight: bold;
+}
+
+.right-header {
+  text-align: right;
+}
+
+.invoice-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #4a4a4a;
+  margin-bottom: 10px;
+}
+
+/* BILL / SHIP */
+.bill-ship-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;
+}
+
+.bill-block p,
+.ship-block p {
+  margin: 0;
+}
+
+.t3-heading {
+  font-size: 16px;
+  font-weight: bold;
+  color: #4a4a4a;
+  margin-bottom: 5px;
+}
+
+.bold {
+  font-weight: bold;
+  color: #000000;
+}
+
+.subline {
+  color: #6a6a6a;
+}
+
+/* TABLE */
+.t3-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.t3-table th {
+  background: #e5e5e5;
+  color: #000000;
+  padding: 10px;
+  text-align: left;
+}
+
+.t3-table td {
+  padding: 10px;
+  border-bottom: 1px solid #dddddd;
+  color: #4a4a4a;
+}
+
+.center {
+  text-align: center;
+}
+
+.right {
+  text-align: right;
+}
+
+/* TOTALS */
+.totals-section {
+  width: 280px;
+  margin-left: auto;
+  margin-top: 20px;
+}
+
+.total-line {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  color: #4a4a4a;
+}
+
+.total-line.bold {
+  font-weight: bold;
+  font-size: 18px;
+  color: #000000;
+}
+
+/* NOTES */
+.notes-block {
+  margin-top: 25px;
+  padding: 12px 18px;
+  background: #f5f5f5;
+  border-left: 4px solid #4a4a4a;
+  color: #4a4a4a;
+}
