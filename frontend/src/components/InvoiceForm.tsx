@@ -368,6 +368,7 @@ function InvoiceForm() {
             type="number"
             className="form-control w-25 text-end"
             value={invoiceData.tax}
+            min={0}
             onChange={(e) =>
               setInvoiceData((p) => ({ ...p, tax: Number(e.target.value) }))
             }

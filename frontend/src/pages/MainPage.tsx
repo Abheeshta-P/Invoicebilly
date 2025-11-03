@@ -90,7 +90,7 @@ function MainPage() {
     if (!validateInvoiceData()) return; // stop if invalid
 
     setSelectedTemplate(id);
-    toast.success("Template selected successfully!");
+    toast.success(`${id} selected successfully!`);
     navigate("/preview");
   };
 

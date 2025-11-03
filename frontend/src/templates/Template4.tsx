@@ -56,7 +56,8 @@ export default function Template4({ invoiceData }: TemplateProps) {
       <table className="t4-table">
         <thead>
           <tr>
-            <th>Item / Description</th>
+            <th>Item Name</th>
+            <th>Item Description</th>
             <th className="center">Quantity</th>
             <th className="right">Rate</th>
             <th className="right">Amount</th>
@@ -66,6 +67,7 @@ export default function Template4({ invoiceData }: TemplateProps) {
         <tbody>
           {invoiceData.items.map((item, idx) => (
             <tr key={idx}>
+              <td>{item.name}</td>
               <td>{item.description}</td>
               <td className="center">{item.quantity}</td>
               <td className="right">₹{(item.amount??0).toFixed(2)}</td>

@@ -92,7 +92,7 @@ function Template1({ invoiceData }: TemplateProps ) {
             <tbody>
               {invoiceData.items.map((item) => (
                 <tr>
-                  <td className="p-2">{item.name}</td>
+                  <td className="p-2">{item.name} -&gt; {item.description}</td>
                   <td className="p-2 text-center">{item.quantity}</td>
                   <td className="p-2 text-end">{item.amount?.toFixed(2)}</td>
                   <td className="p-2 text-end">

@@ -55,7 +55,8 @@ export default function Template5({ invoiceData }: TemplateProps) {
       <table className="t5-table">
         <thead>
           <tr>
-            <th>Item # / Description</th>
+            <th>Item Name</th>
+            <th>Item Description</th>
             <th className="center">Qty</th>
             <th className="right">Rate</th>
             <th className="right">Amount</th>
@@ -66,8 +67,9 @@ export default function Template5({ invoiceData }: TemplateProps) {
           {invoiceData.items.map((item, idx) => (
             <tr key={idx}>
               <td>
-                {idx + 1}. {item.description}
+                {idx + 1}. {item.name}
               </td>
+              <td>{item.description}</td>
               <td className="center">{item.quantity}</td>
               <td className="right">₹{(item.amount ?? 0).toFixed(2)}</td>
               <td className="right">₹{(item.total ?? 0).toFixed(2)}</td>

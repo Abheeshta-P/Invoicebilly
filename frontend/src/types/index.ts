@@ -78,3 +78,7 @@ export type FormattedInvoiceDataType = {
   total: number;
 };
 
+export type PayloadType = IntialInvoiceDataType & {
+  template: string;
+  thumbnailURL: string;
+} 
