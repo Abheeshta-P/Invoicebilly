@@ -3,11 +3,11 @@ import type { IntialInvoiceDataType } from "@/types";
 export const formatInvoiceData = (invoiceData: IntialInvoiceDataType) => {
   const {
     title,
-    company ,
-    invoice ,
-    account ,
-    billing ,
-    shipping ,
+    company,
+    invoice,
+    account,
+    billing,
+    shipping,
     tax = 0,
     notes = "",
     items = [],
@@ -52,6 +52,17 @@ export const formatInvoiceData = (invoiceData: IntialInvoiceDataType) => {
     tax,
     subtotal,
     taxAmount,
-    total
-  }
+    total,
+  };
+};
+
+export const formatDate = (dateStr: string) => {
+  if (!dateStr) return "N/A";
+
+  const date = new Date(dateStr);
+  date.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
 };

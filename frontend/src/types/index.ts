@@ -82,3 +82,46 @@ export type PayloadType = IntialInvoiceDataType & {
   template: string;
   thumbnailURL: string;
 } 
+
+export type InvoiceResponseType = {
+  id: string;
+  title: string;
+  company: {
+    name: string;
+    number: string;
+    address: string;
+  };
+  billing: {
+    name: string;
+    phone: string;
+    address: string;
+  };
+  shipping: {
+    name: string;
+    phone: string;
+    address: string;
+  };
+  invoice: {
+    number: string;
+    date: string;
+    dueDate: string;
+  };
+  items: {
+    name: string;
+    quantity: number;
+    amount: number;
+    description: string;
+  }[];
+  account: {
+    name: string;
+    number: string;
+    ifsccode: string;
+  };
+  notes: string;
+  logo: string;
+  tax: number;
+  createdAt: string; // Instant → string (ISO)
+  lastUpdatedAt: string; // Instant → string (ISO)
+  thumbnailURL: string;
+  template: string;
+};
