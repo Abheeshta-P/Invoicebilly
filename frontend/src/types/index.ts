@@ -1,3 +1,5 @@
+import type { TemplateKey } from "@/components/InvoicePreview";
+
 export type InvoiceItem = {
   name: string;
   quantity: number | undefined;
@@ -79,7 +81,7 @@ export type FormattedInvoiceDataType = {
 };
 
 export type PayloadType = IntialInvoiceDataType & {
-  template: string;
+  template: TemplateKey;
   thumbnailURL: string;
 } 
 
@@ -123,5 +125,5 @@ export type InvoiceResponseType = {
   createdAt: string; // Instant → string (ISO)
   lastUpdatedAt: string; // Instant → string (ISO)
   thumbnailURL: string;
-  template: string;
+  template: TemplateKey
 };

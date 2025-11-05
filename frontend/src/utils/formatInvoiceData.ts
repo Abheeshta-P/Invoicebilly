@@ -1,4 +1,4 @@
-import type { IntialInvoiceDataType } from "@/types";
+import type { IntialInvoiceDataType, InvoiceResponseType } from "@/types";
 
 export const formatInvoiceData = (invoiceData: IntialInvoiceDataType) => {
   const {
@@ -66,3 +66,21 @@ export const formatDate = (dateStr: string) => {
     year: "numeric",
   });
 };
+
+export const mapInvoiceResponseToInitialData = (
+  invoice: InvoiceResponseType
+): IntialInvoiceDataType => ({
+  title: invoice.title,
+  company: invoice.company,
+  billing: invoice.billing,
+  shipping: invoice.shipping,
+  invoice: invoice.invoice,
+  account: invoice.account,
+  tax: invoice.tax,
+  notes: invoice.notes,
+  logo: invoice.logo,
+  items: invoice.items.map((item) => ({
+    ...item,
+    total: item.amount * item.quantity,
+  }))
+})
