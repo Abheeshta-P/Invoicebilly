@@ -9,7 +9,13 @@ import { useNavigate } from "react-router-dom";
 
 function MainPage() {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
-  const { invoiceTitle, invoiceData, setInvoiceTitle, setInvoiceData, setSelectedTemplate } = useContext(AppContext);
+  const {
+    invoiceTitle,
+    invoiceData,
+    setInvoiceTitle,
+    setInvoiceData,
+    setSelectedTemplate,
+  } = useContext(AppContext);
   const navigate = useNavigate();
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -17,8 +23,8 @@ function MainPage() {
     setInvoiceTitle(newTitle);
     setInvoiceData((prev) => ({
       ...prev,
-      title:newTitle
-    }))
+      title: newTitle,
+    }));
   };
 
   const handleTitleEdit = () => {
@@ -58,6 +64,14 @@ function MainPage() {
       toast.error("Please complete invoice details.");
       return false;
     }
+
+    // 🟡 Add this new check
+    const { date, dueDate } = data.invoice;
+    if (new Date(dueDate) < new Date(date)) {
+      toast.error("Due date cannot be before the invoice date.");
+      return false;
+    }
+
     if (!data.logo) {
       toast.error("Please add logo.");
       return false;
@@ -70,7 +84,10 @@ function MainPage() {
     }
 
     const invalidItem = data.items.find(
-      (item) => !item.name.trim() || (item.quantity!= undefined && item.quantity <= 0) || (item.amount!=undefined && item.amount <= 0)
+      (item) =>
+        !item.name.trim() ||
+        (item.quantity !== undefined && item.quantity <= 0) ||
+        (item.amount !== undefined && item.amount <= 0)
     );
     if (invalidItem) {
       toast.error("Please fill all item details correctly.");
@@ -83,7 +100,7 @@ function MainPage() {
       return false;
     }
 
-    return true; 
+    return true;
   };
 
   const handleTemplateClick = (id: TemplateKey): void => {
@@ -93,8 +110,6 @@ function MainPage() {
     toast.success(`${id} selected successfully!`);
     navigate("/preview");
   };
-
-  
 
   return (
     <div className="mainpage container-fluid bg-light min-vh-100 py-4">
