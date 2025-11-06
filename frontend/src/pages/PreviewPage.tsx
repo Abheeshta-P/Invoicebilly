@@ -3,6 +3,7 @@ import InvoicePreview, { type TemplateKey } from "@/components/InvoicePreview";
 import { AppContext } from "@/context/AppContext";
 import { uploadInvoiceThumbnail } from "@/service/CloudinarySerivice";
 import { deleteInvoice, saveInvoice } from "@/service/InvoiceService";
+import { generatePdfFromElement } from "@/utils/pdfUtils";
 import html2canvas from "html2canvas";
 import { Loader2 } from "lucide-react";
 import { useContext, useRef, useState } from "react";
@@ -14,6 +15,7 @@ function PreviewPage() {
     useContext(AppContext);
   const previewRef = useRef<HTMLDivElement | null>(null);
   const [loading, setLoading] = useState(false);
+  const [downloading, setDownloading] = useState(false)
   const navigate = useNavigate();
 
   const handleSaveAndExit = async () => {
@@ -71,7 +73,21 @@ const handleDelete = async () => {
     const error = err as Error;
     toast.error("Failed to delete invoice: " + error.message);
   }
-};
+  };
+  
+  const handleDownloadPdf = async () => {
+    if (!previewRef.current) return;
+
+    try {
+      setDownloading(true)
+      await generatePdfFromElement(previewRef.current,`${invoiceData.title}-invoice_${Date.now()}.pdf`)
+    } catch (err) {
+      const error = err as Error
+      toast.error("Failed to generate invoice"+error.message)
+    } finally {
+      setDownloading(false)
+    }
+  }
 
   return (
     <div className="previewpage container-fluid d-flex flex-column p-3 min-vh-100">
@@ -119,8 +135,13 @@ const handleDelete = async () => {
             Back to Dashboard
           </button>
           <button className="btn btn-md btn-info">Send Email</button>
-          <button className="btn btn-md btn-success d-flex align-items-center justify-content-center">
-            Download PDF
+          <button
+            className="btn btn-md btn-success d-flex align-items-center justify-content-center"
+            onClick={handleDownloadPdf}
+            disabled={downloading}
+          >
+            {downloading && <Loader2 className="me-2 spin-animation" size={18} />}
+            {downloading ? "Downloading..." : "Download PDF"}
           </button>
         </div>
       </div>

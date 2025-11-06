@@ -2,7 +2,7 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 
 export const generatePdfFromElement = async (
-  element,
+  element: HTMLElement,
   fileName = "invoice.pdf",
   returnBlob = false
 ) => {

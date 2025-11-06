@@ -13,7 +13,7 @@ function Template1({ invoiceData }: TemplateProps ) {
         {invoiceData.logo && (
           <img
             src={invoiceData.logo}
-            className="company-logo mb-2"
+            className="company-logo mb-2 object-fit-contain"
             alt="logo"
           />
         )}
