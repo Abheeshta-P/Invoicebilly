@@ -2,7 +2,7 @@ import { templates } from "@/assets/assets";
 import InvoicePreview, { type TemplateKey } from "@/components/InvoicePreview";
 import { AppContext } from "@/context/AppContext";
 import { uploadInvoiceThumbnail } from "@/service/CloudinarySerivice";
-import { saveInvoice } from "@/service/InvoiceService";
+import { deleteInvoice, saveInvoice } from "@/service/InvoiceService";
 import html2canvas from "html2canvas";
 import { Loader2 } from "lucide-react";
 import { useContext, useRef, useState } from "react";
@@ -15,6 +15,7 @@ function PreviewPage() {
   const previewRef = useRef<HTMLDivElement | null>(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
   const handleSaveAndExit = async () => {
     try {
       setLoading(true);
@@ -51,6 +52,27 @@ function PreviewPage() {
     }
   };
 
+const handleDelete = async () => {
+  // If there's no ID, we can't delete
+  if (!invoiceData.id) {
+    toast.error("Cannot delete — invoice not yet saved!");
+    return;
+  }
+
+  try {
+    const response = await deleteInvoice(invoiceData.id);
+    if (response.status === 204) {
+      toast.success("Invoice deleted successfully");
+      navigate("/dashboard");
+    } else {
+      toast.error("Unable to delete invoice");
+    }
+  } catch (err) {
+    const error = err as Error;
+    toast.error("Failed to delete invoice: " + error.message);
+  }
+};
+
   return (
     <div className="previewpage container-fluid d-flex flex-column p-3 min-vh-100">
       {/* action buttons */}
@@ -85,8 +107,15 @@ function PreviewPage() {
             {loading && <Loader2 className="me-2 spin-animation" size={18} />}
             {loading ? "Saving..." : "Save and Exit"}
           </button>
-          <button className="btn btn-md btn-danger">Delete Invoice</button>
-          <button className="btn btn-md btn-secondary">
+          {invoiceData.id && (
+            <button className="btn btn-md btn-danger" onClick={handleDelete}>
+              Delete Invoice
+            </button>
+          )}
+          <button
+            className="btn btn-md btn-secondary"
+            onClick={() => navigate("/dashboard")}
+          >
             Back to Dashboard
           </button>
           <button className="btn btn-md btn-info">Send Email</button>

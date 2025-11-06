@@ -83,7 +83,7 @@ function MainPage() {
       return false;
     }
 
-    return true; // ✅ All validations passed
+    return true; 
   };
 
   const handleTemplateClick = (id: TemplateKey): void => {

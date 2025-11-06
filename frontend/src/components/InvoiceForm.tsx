@@ -137,6 +137,7 @@ function InvoiceForm() {
         <h5>Company Logo</h5>
         <ImageUploader />
       </div>
+      
       {/* Company Info */}
       <div className="mb-5">
         <h5>Your Company</h5>
@@ -160,6 +161,7 @@ function InvoiceForm() {
           ))}
         </div>
       </div>
+
       {/* Billing Info */}
       <div className="mb-5">
         <h5>Bill To</h5>
@@ -183,6 +185,7 @@ function InvoiceForm() {
           ))}
         </div>
       </div>
+
       {/* Shipping Info */}
       <div className="mb-5">
         <div className="d-flex justify-content-between align-items-center">
@@ -220,6 +223,7 @@ function InvoiceForm() {
           ))}
         </div>
       </div>
+
       {/* Invoice Info */}
       <div className="mb-5">
         <h5>Invoice Info</h5>
@@ -249,6 +253,7 @@ function InvoiceForm() {
           ))}
         </div>
       </div>
+
       {/* Items */}
       <div className="mb-5">
         <h5>Items</h5>
@@ -322,6 +327,7 @@ function InvoiceForm() {
           Add Item
         </button>
       </div>
+
       {/* Bank Account Info */}
       <div className="mb-5">
         <h5 className="mb-3">Bank Account Details</h5>
@@ -379,6 +385,7 @@ function InvoiceForm() {
           <span>₹{grandTotal.toFixed(2)}</span>
         </div>
       </div>
+
       {/* notes */}
       <div className="mb-5">
         <h5>Notes: </h5>

@@ -105,7 +105,7 @@ function Dashboard() {
                     src={invoice.thumbnailURL}
                     alt="Invoice thumbnail"
                     className="card-img-top"
-                    style={{ height: "200px", objectFit: "cover" }}
+                    style={{ height: "200px", objectFit: "cover", objectPosition:"top" }}
                   />
                 ) : (
                   <div

@@ -33,6 +33,7 @@ export type InvoiceMeta = {
 };
 
 export type IntialInvoiceDataType = {
+  id?: string;
   title: string;
   billing: AddressInfo;
   shipping: AddressInfo;
@@ -44,7 +45,6 @@ export type IntialInvoiceDataType = {
   items: InvoiceItem[];
   logo: string;
 };
-
 
 export type FormattedInvoiceDataType = {
   title: string;

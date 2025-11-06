@@ -60,7 +60,7 @@ export const formatDate = (dateStr: string) => {
   if (!dateStr) return "N/A";
 
   const date = new Date(dateStr);
-  date.toLocaleDateString("en-GB", {
+  return date.toLocaleDateString("en-GB", {
     day: "2-digit",
     month: "short",
     year: "numeric",
@@ -70,6 +70,7 @@ export const formatDate = (dateStr: string) => {
 export const mapInvoiceResponseToInitialData = (
   invoice: InvoiceResponseType
 ): IntialInvoiceDataType => ({
+  id: invoice.id,
   title: invoice.title,
   company: invoice.company,
   billing: invoice.billing,

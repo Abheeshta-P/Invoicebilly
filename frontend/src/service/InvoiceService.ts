@@ -9,3 +9,7 @@ export const saveInvoice = (payload: PayloadType) => {
 export const getAllInvoices = () => {
   return axios.get(`${baseURL}/invoices`);
 };
+
+export const deleteInvoice = (id: string) => {
+  return axios.delete(`${baseURL}/invoices/${id}`);
+};
