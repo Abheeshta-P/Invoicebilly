@@ -1,7 +1,14 @@
 import { Link } from "react-router-dom";
 import Logo from "./Logo";
+import { SignedIn, SignedOut, useClerk, UserButton } from "@clerk/clerk-react";
 
 function Menubar() {
+  const { openSignIn } = useClerk();
+
+  const openLogin = () => {
+    openSignIn({});
+  }
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
       <div className="container">
@@ -28,9 +35,14 @@ function Menubar() {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto align-items-center">
             <li className="nav-item"><Link className="nav-link fw-medium" to={"/"}>Home</Link></li>
-            <li className="nav-item"><Link className="nav-link fw-medium" to={"/dasboard"}>Dashboard</Link></li>
-            <li className="nav-item"><button className="nav-link fw-medium">Generate</button></li>
-            <li className="nav-item"><button className="btn btn-primary rounded-pill px-4">Login/Signup</button></li>
+            <SignedIn>
+              <li className="nav-item"><Link className="nav-link fw-medium" to={"/dasboard"}>Dashboard</Link></li>
+              <li className="nav-item me-4"><button className="nav-link fw-medium">Generate</button></li>
+              <UserButton/>
+            </SignedIn>
+            <SignedOut>
+              <li className="nav-item ms-4"><button className="btn btn-primary rounded-pill px-4" onClick={openLogin}>Login/Signup</button></li>
+            </SignedOut>
           </ul>
         </div>
       </div>

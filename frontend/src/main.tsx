@@ -5,11 +5,15 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import './index.css'
 import App from './App.tsx'
 import { AppContextProvider } from './context/AppContextProvider.tsx';
+import { ClerkProvider } from '@clerk/clerk-react';
+import { clerkKey } from './config/config.ts';
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AppContextProvider>
-      <App />
+      <ClerkProvider publishableKey={clerkKey}>
+        <App />
+      </ClerkProvider>
     </AppContextProvider>
   </StrictMode>
 );
