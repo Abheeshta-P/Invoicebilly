@@ -2,7 +2,7 @@ import { templates } from "@/assets/assets";
 import InvoicePreview, { type TemplateKey } from "@/components/InvoicePreview";
 import { AppContext } from "@/context/AppContext";
 import { uploadInvoiceThumbnail } from "@/service/CloudinarySerivice";
-import { deleteInvoice, saveInvoice } from "@/service/InvoiceService";
+import { deleteInvoice, saveInvoice, sendInvoice } from "@/service/InvoiceService";
 import { generatePdfFromElement } from "@/utils/pdfUtils";
 import html2canvas from "html2canvas";
 import { Loader2 } from "lucide-react";
@@ -15,7 +15,11 @@ function PreviewPage() {
     useContext(AppContext);
   const previewRef = useRef<HTMLDivElement | null>(null);
   const [loading, setLoading] = useState(false);
-  const [downloading, setDownloading] = useState(false)
+  const [downloading, setDownloading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [customerEmail, setCustomerEmail] = useState("");
+  const [emailing, setEmailing] = useState(false);
+
   const navigate = useNavigate();
 
   const handleSaveAndExit = async () => {
@@ -54,38 +58,73 @@ function PreviewPage() {
     }
   };
 
-const handleDelete = async () => {
-  // If there's no ID, we can't delete
-  if (!invoiceData.id) {
-    toast.error("Cannot delete — invoice not yet saved!");
-    return;
-  }
-
-  try {
-    const response = await deleteInvoice(invoiceData.id);
-    if (response.status === 204) {
-      toast.success("Invoice deleted successfully");
-      navigate("/dashboard");
-    } else {
-      toast.error("Unable to delete invoice");
+  const handleDelete = async () => {
+    // If there's no ID, we can't delete
+    if (!invoiceData.id) {
+      toast.error("Cannot delete — invoice not yet saved!");
+      return;
     }
-  } catch (err) {
-    const error = err as Error;
-    toast.error("Failed to delete invoice: " + error.message);
-  }
+
+    try {
+      const response = await deleteInvoice(invoiceData.id);
+      if (response.status === 204) {
+        toast.success("Invoice deleted successfully");
+        navigate("/dashboard");
+      } else {
+        toast.error("Unable to delete invoice");
+      }
+    } catch (err) {
+      const error = err as Error;
+      toast.error("Failed to delete invoice: " + error.message);
+    }
   };
-  
+
   const handleDownloadPdf = async () => {
     if (!previewRef.current) return;
 
     try {
       setDownloading(true)
-      await generatePdfFromElement(previewRef.current,`${invoiceData.title}-invoice_${Date.now()}.pdf`)
+      await generatePdfFromElement(previewRef.current, `${invoiceData.title}-invoice_${Date.now()}.pdf`)
     } catch (err) {
       const error = err as Error
-      toast.error("Failed to generate invoice"+error.message)
+      toast.error("Failed to generate invoice" + error.message)
     } finally {
       setDownloading(false)
+    }
+  };
+
+  const handleSendEmail = async () => {
+    if (!previewRef.current || !customerEmail) {
+      return toast.error("Please enter a valid email and try again!")
+    }
+    try {
+      // start emailing
+      setEmailing(true);
+      const pdfBlob = await generatePdfFromElement(previewRef.current, `${invoiceData.title}-invoice_${Date.now()}.pdf`, true);
+
+      if (!pdfBlob) {
+        toast.error("Could not generate the pdf. Try again later!");
+        return;
+      }
+
+      //send that blob pdf to mail in backend
+      const formData = new FormData();
+      formData.append("file", pdfBlob, `${invoiceData.title}-invoice_${Date.now()}.pdf`);
+      formData.append("email", customerEmail);
+
+      const response = await sendInvoice(formData);
+      if (response.status === 200) {
+        toast.success("Email sent successfully!");
+        setShowModal(false);
+        setCustomerEmail("");
+      } else {
+        toast.error("Failed to send email.");
+      }
+    } catch (err) {
+      const error = err as Error;
+      toast.error("Failed to send the email" + error.message);
+    } finally {
+      setEmailing(false);
     }
   }
 
@@ -101,11 +140,10 @@ const handleDelete = async () => {
                 key={id}
                 style={{ minWidth: "100px", height: "38px" }}
                 onClick={() => setSelectedTemplate(id)}
-                className={`btn btn-sm rounded-pill p-2 ${
-                  selectedTemplate === id
-                    ? "btn-warning"
-                    : "btn-outline-secondary"
-                }`}
+                className={`btn btn-sm rounded-pill p-2 ${selectedTemplate === id
+                  ? "btn-warning"
+                  : "btn-outline-secondary"
+                  }`}
               >
                 {label}
               </button>
@@ -134,7 +172,9 @@ const handleDelete = async () => {
           >
             Back to Dashboard
           </button>
-          <button className="btn btn-md btn-info">Send Email</button>
+          <button className="btn btn-md btn-info" onClick={() => {
+            setShowModal(true)
+          }}>Send Email</button>
           <button
             className="btn btn-md btn-success d-flex align-items-center justify-content-center"
             onClick={handleDownloadPdf}
@@ -155,6 +195,29 @@ const handleDelete = async () => {
           />
         </div>
       </div>
+
+      {/* modal */}
+      {showModal && (
+        <div className="modal d-block" tabIndex={-1} role="dialog" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Send Invoice</h5>
+                <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
+              </div>
+              <div className="modal-body">
+                <input type="email" name="email" id="email" className="form-control" placeholder="Customer email" onChange={(e) => setCustomerEmail(e.target.value)} value={customerEmail}/>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-primary" onClick={handleSendEmail} disabled={emailing}>
+                  {emailing ? "Sending..." : "Send"}
+                </button>
+                <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

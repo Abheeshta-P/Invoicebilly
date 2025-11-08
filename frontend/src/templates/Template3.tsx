@@ -90,7 +90,7 @@ export default function Template3({ invoiceData }: TemplateProps) {
           </div>
         )}
 
-        <div className="total-line bold">
+        <div className="total-line bold text-black bg-dark-subtle">
           <span>Total:</span>
           <span>₹{invoiceData.total?.toFixed(2)}</span>
         </div>

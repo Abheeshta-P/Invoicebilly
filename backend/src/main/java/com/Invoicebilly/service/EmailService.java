@@ -29,7 +29,7 @@ public class EmailService {
 
         helper.setFrom(fromEmail);
         helper.setTo(toEmail);
-        helper.setSubject("Your Invoice from InvoiceBilly 🧾");
+        helper.setSubject("Invoice from InvoiceBilly");
         helper.setText(
                 "Hello,\n\nPlease find attached your invoice.\n\n" +
                         "If you have any questions, feel free to reach out.\n\n" +
