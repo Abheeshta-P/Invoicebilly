@@ -15,6 +15,8 @@ public class Invoice {
     @Id
     private String id;
 
+    private String clerkId;
+
     private String title;
     private Company company;
     private Billing billing;
