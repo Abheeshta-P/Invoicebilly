@@ -4,9 +4,10 @@ import { AppContext } from "@/context/AppContext";
 import { uploadInvoiceThumbnail } from "@/service/CloudinarySerivice";
 import { deleteInvoice, saveInvoice, sendInvoice } from "@/service/InvoiceService";
 import { generatePdfFromElement } from "@/utils/pdfUtils";
+import { useAuth, useUser } from "@clerk/clerk-react";
 import html2canvas from "html2canvas";
 import { Loader2 } from "lucide-react";
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
@@ -19,6 +20,8 @@ function PreviewPage() {
   const [showModal, setShowModal] = useState(false);
   const [customerEmail, setCustomerEmail] = useState("");
   const [emailing, setEmailing] = useState(false);
+  const { getToken } = useAuth();
+  const { user } = useUser();
 
   const navigate = useNavigate();
 
@@ -38,10 +41,12 @@ function PreviewPage() {
       const payload = {
         ...invoiceData,
         thumbnailURL,
+        clerkId: user?.id,
         template: selectedTemplate,
       };
 
-      const response = await saveInvoice(payload);
+      const token = await getToken();
+      const response = await saveInvoice(payload, token);
 
       if (response?.status === 200) {
         toast.success("Invoice saved successfully.");
@@ -66,7 +71,8 @@ function PreviewPage() {
     }
 
     try {
-      const response = await deleteInvoice(invoiceData.id);
+      const token = await getToken();
+      const response = await deleteInvoice(invoiceData.id, token);
       if (response.status === 204) {
         toast.success("Invoice deleted successfully");
         navigate("/dashboard");
@@ -112,7 +118,8 @@ function PreviewPage() {
       formData.append("file", pdfBlob, `${invoiceData.title}-invoice_${Date.now()}.pdf`);
       formData.append("email", customerEmail);
 
-      const response = await sendInvoice(formData);
+      const token = await getToken();
+      const response = await sendInvoice(formData, token);
       if (response.status === 200) {
         toast.success("Email sent successfully!");
         setShowModal(false);
@@ -127,6 +134,13 @@ function PreviewPage() {
       setEmailing(false);
     }
   }
+
+  useEffect(() => {
+    if (!invoiceData || !invoiceData.items?.length) {
+      toast.error("Invoice data is empty.")
+      navigate("/dashboard");
+    }
+  }, [invoiceData, navigate])
 
   return (
     <div className="previewpage container-fluid d-flex flex-column p-3 min-vh-100">
@@ -206,7 +220,7 @@ function PreviewPage() {
                 <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
               </div>
               <div className="modal-body">
-                <input type="email" name="email" id="email" className="form-control" placeholder="Customer email" onChange={(e) => setCustomerEmail(e.target.value)} value={customerEmail}/>
+                <input type="email" name="email" id="email" className="form-control" placeholder="Customer email" onChange={(e) => setCustomerEmail(e.target.value)} value={customerEmail} />
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-primary" onClick={handleSendEmail} disabled={emailing}>

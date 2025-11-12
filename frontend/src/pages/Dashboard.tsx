@@ -4,6 +4,7 @@ import { AppContext } from "@/context/AppContext";
 import { getAllInvoices } from "@/service/InvoiceService";
 import type { InvoiceResponseType } from "@/types";
 import { formatDate, mapInvoiceResponseToInitialData } from "@/utils/formatInvoiceData";
+import { useAuth } from "@clerk/clerk-react";
 import { Loader2, Plus } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -15,6 +16,7 @@ function Dashboard() {
   const navigate = useNavigate();
   const { setInvoiceData, setSelectedTemplate, setInvoiceTitle } =
     useContext(AppContext);
+  const { getToken } = useAuth();
 
   const handleViewClick = (invoice: InvoiceResponseType) => {
     setInvoiceData(mapInvoiceResponseToInitialData(invoice));
@@ -27,7 +29,8 @@ function Dashboard() {
     const fetchInvoices = async () => {
       try {
         setIsLoading(true);
-        const response = await getAllInvoices();
+        const token = await getToken();
+        const response = await getAllInvoices(token);
         setInvoices(response.data);
       } catch (err) {
         const error = err as Error;
@@ -40,12 +43,12 @@ function Dashboard() {
     fetchInvoices();
   }, []);
 
-  const handleCreateNew = ()=>{
+  const handleCreateNew = () => {
     if (isLoading) {
       toast("Please wait, still loading invoices...");
       return;
     }
-    
+
     //reset intial state from context
     setInvoiceTitle("New Invoice");
     setSelectedTemplate("template1")
@@ -59,9 +62,8 @@ function Dashboard() {
         {/* Create New Invoice card */}
         <div className="col">
           <div
-            className={`card h-100 d-flex justify-content-center align-items-center border border-2 border-light shadow-sm ${
-              isLoading ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
-            }`}
+            className={`card h-100 d-flex justify-content-center align-items-center border border-2 border-light shadow-sm ${isLoading ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+              }`}
             style={{ minHeight: "270px" }}
             onClick={handleCreateNew}
           >
@@ -98,14 +100,14 @@ function Dashboard() {
               <div
                 className="card h-100 shadow-sm cursor-pointer"
                 style={{ minHeight: "270px" }}
-                onClick={()=> handleViewClick(invoice)}
+                onClick={() => handleViewClick(invoice)}
               >
                 {invoice.thumbnailURL ? (
                   <img
                     src={invoice.thumbnailURL}
                     alt="Invoice thumbnail"
                     className="card-img-top"
-                    style={{ height: "200px", objectFit: "cover", objectPosition:"top" }}
+                    style={{ height: "200px", objectFit: "cover", objectPosition: "top" }}
                   />
                 ) : (
                   <div

@@ -6,9 +6,11 @@ import com.Invoicebilly.service.InvoiceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -26,16 +28,18 @@ public class InvoiceController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Invoice>> fetchInvoices(){
-        return ResponseEntity.ok(invoiceService.fetchInvoices());
+    public ResponseEntity<List<Invoice>> fetchInvoices(Authentication authentication){
+        return ResponseEntity.ok(invoiceService.fetchInvoices(authentication.getName()));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String>  deleteInvoice(@PathVariable String id){
-        System.out.println(id);
+    public ResponseEntity<String>  deleteInvoice(@PathVariable String id, Authentication authentication){
         try {
-            invoiceService.deleteInvoiceById(id);
-            return ResponseEntity.status(204).body("Invoice deleted successfully");
+            if(authentication.getName() != null){
+                invoiceService.deleteInvoiceById(id, authentication.getName());
+                return ResponseEntity.status(204).body("Invoice deleted successfully");
+            }
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,"User does not have permission to access this resource");
         } catch (RuntimeException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invoice not found: " + e.getMessage());
         } catch (Exception e) {

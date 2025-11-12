@@ -83,10 +83,12 @@ export type FormattedInvoiceDataType = {
 export type PayloadType = IntialInvoiceDataType & {
   template: TemplateKey;
   thumbnailURL: string;
+  clerkId: string|undefined;
 } 
 
 export type InvoiceResponseType = {
   id: string;
+  clerkId: string|undefined;
   title: string;
   company: {
     name: string;
