@@ -17,7 +17,7 @@ import java.util.Map;
 @Component
 public class ClerkJwksProvider {
 
-    @Value("${clerk.jwsk-url}")
+    @Value("${clerk.jwks.url}")
     private String jwksUrl;
 
     private final Map<String, PublicKey> keyCache = new HashMap<>();
@@ -42,7 +42,7 @@ public class ClerkJwksProvider {
             String kty = keyNode.get("kty").asText();
             String alg = keyNode.get("alg").asText();
 
-            if("RSA".equals(kty) && "RSA256".equals(alg)){
+            if("RSA".equals(kty) && "RS256".equals(alg)){
                 String n = keyNode.get("n").asText();
                 String e = keyNode.get("e").asText();
 
@@ -55,7 +55,7 @@ public class ClerkJwksProvider {
 
     private PublicKey createPublicKey(String modulus, String exponent) throws Exception{
         byte[] modulusBytes = Base64.getUrlDecoder().decode(modulus);
-        byte[] exponentBytes = Base64.getDecoder().decode(exponent);
+        byte[] exponentBytes = Base64.getUrlDecoder().decode(exponent);
 
         BigInteger modulusBigInt = new BigInteger(1,modulusBytes);
         BigInteger exponentBigInt = new BigInteger(1,exponentBytes);

@@ -1,12 +1,26 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Logo from "./Logo";
 import { SignedIn, SignedOut, useClerk, UserButton } from "@clerk/clerk-react";
+import { useContext } from "react";
+import { AppContext } from "@/context/AppContext";
+import { intialInvoiceData } from "@/const";
 
 function Menubar() {
   const { openSignIn } = useClerk();
+  const { setInvoiceData, setSelectedTemplate, setInvoiceTitle } = useContext(AppContext);
+
+  const navigate = useNavigate();
 
   const openLogin = () => {
     openSignIn({});
+  }
+
+  const handleGenerateClick = () => {
+    // reset context
+    setInvoiceData(intialInvoiceData);
+    setSelectedTemplate("template1");
+    setInvoiceTitle("New Invoice");
+    navigate("/generate");
   }
 
   return (
@@ -36,8 +50,8 @@ function Menubar() {
           <ul className="navbar-nav ms-auto align-items-center">
             <li className="nav-item"><Link className="nav-link fw-medium" to={"/"}>Home</Link></li>
             <SignedIn>
-              <li className="nav-item"><Link className="nav-link fw-medium" to={"/dasboard"}>Dashboard</Link></li>
-              <li className="nav-item me-4"><button className="nav-link fw-medium">Generate</button></li>
+              <li className="nav-item"><Link className="nav-link fw-medium" to={"/dashboard"}>Dashboard</Link></li>
+              <li className="nav-item me-4"><button className="nav-link fw-medium" onClick={handleGenerateClick}>Generate</button></li>
               <UserButton/>
             </SignedIn>
             <SignedOut>

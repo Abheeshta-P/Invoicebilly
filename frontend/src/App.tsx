@@ -20,11 +20,11 @@ function App() {
           <SignedIn><Dashboard /></SignedIn>
           <SignedOut><RedirectToSignIn /></SignedOut>
         </>} />
-        <Route path="/generate" element={<>
+        <Route path="/preview" element={<>
           <SignedIn><PreviewPage /></SignedIn>
           <SignedOut><RedirectToSignIn /></SignedOut>
         </>} />
-        <Route path="/preview" element={<>
+        <Route path="/generate" element={<>
           <SignedIn><MainPage /></SignedIn>
           <SignedOut><RedirectToSignIn /></SignedOut>
         </>} />
