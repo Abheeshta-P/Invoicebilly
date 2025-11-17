@@ -55,7 +55,8 @@ export default function Template3({ invoiceData }: TemplateProps) {
       <table className="t3-table">
         <thead>
           <tr>
-            <th>Item / Description</th>
+            <th>Item</th>
+            <th>Description</th>
             <th className="center">Quantity</th>
             <th className="right">Rate</th>
             <th className="right">Amount</th>
@@ -66,6 +67,7 @@ export default function Template3({ invoiceData }: TemplateProps) {
           {invoiceData.items.map((item, idx) => (
             <tr key={idx}>
               <td>{item.name}</td>
+              <td>{item.description}</td>
               <td className="center">{item.quantity}</td>
               <td className="right">₹{item.amount?.toFixed(2)}</td>
               <td className="right">
