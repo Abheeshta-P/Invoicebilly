@@ -88,7 +88,7 @@ function Dashboard() {
 
         {/* No invoices message */}
         {!isLoading && invoices.length === 0 && (
-          <div className="col-12 text-center mt-5">
+          <div className="col-12 text-center mt-5 d-flex justify-content-center align-items-center">
             <p className="text-muted fs-5">No invoices found.</p>
           </div>
         )}

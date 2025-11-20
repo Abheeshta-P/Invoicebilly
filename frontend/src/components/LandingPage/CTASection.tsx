@@ -1,4 +1,19 @@
+import { intialInvoiceData } from "@/const";
+import { AppContext } from "@/context/AppContext";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+
 function CTASection() {
+  const navigate = useNavigate();
+  const { setInvoiceData, setInvoiceTitle, setSelectedTemplate } = useContext(AppContext);
+
+  const handleGenerateClick = () => {
+    // reset context
+    setInvoiceData(intialInvoiceData);
+    setSelectedTemplate("template1");
+    setInvoiceTitle("New Invoice");
+    navigate("/generate");
+  }
   return (
     <section
       className="container-fluid py-5 mt-5 d-flex flex-column justify-content-center align-items-center text-center px-3"
@@ -15,6 +30,7 @@ function CTASection() {
       <button
         className="btn btn-primary btn-md fw-bold px-4"
         style={{ borderRadius: "2rem" }}
+        onClick={handleGenerateClick}
       >
         Generate Invoice
       </button>
