@@ -5,8 +5,11 @@ COPY pom.xml .
 COPY src ./src
 RUN mvn -q clean package -DskipTests
 
-# 2) Runtime stage – JDK 25
+# 2) Runtime stage – Java 25
 FROM eclipse-temurin:25-jdk-alpine
 WORKDIR /app
+
+# Copy whatever jar is in target as app.jar
 COPY --from=build /app/target/*.jar app.jar
+
 ENTRYPOINT ["java","-jar","/app.jar"]
