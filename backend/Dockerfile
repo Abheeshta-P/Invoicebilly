@@ -1,11 +1,12 @@
-# Use official Eclipse Temurin Java 25 runtime image
+# 1) Build stage
+FROM maven:3.9.9-eclipse-temurin-25 AS build
+WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn -q clean package -DskipTests
+
+# 2) Runtime stage
 FROM eclipse-temurin:25-jdk-alpine
-
-# Argument for jar file location
-ARG JAR_FILE=target/*.jar
-
-# Copy jar into container
-COPY ${JAR_FILE} app.jar
-
-# Run the jar
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 ENTRYPOINT ["java","-jar","/app.jar"]
