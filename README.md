@@ -1,22 +1,22 @@
-# 🧾 InvoiceBilly - Invoice Generator Quick & Easy Invoicing Web App
+# InvoiceBilly - Invoice Generator Quick & Easy Invoicing Web App
 
 Create, preview, export, and send professional invoices effortlessly with this full-stack Invoice Generator web application! Perfect for freelancers, small businesses, and developers looking to streamline invoicing.
 
 
-## 🚀 Features
+## Features
 
-- ✍️ Create & manage invoices with client & item details
-- 🎨 Choose from multiple beautiful invoice templates
-- 👀 Live invoice preview before saving or sending
-- 📄 Export invoices as PDF using jsPDF + html2canvas
-- 📧 Send invoices directly via email (SMTP Brevo)
-- ☁️ Upload logos and images with Cloudinary integration
-- 🔐 Secure login/signup via Clerk Authentication
-- 🗃️ Save, edit, reuse, and delete invoices (MongoDB backend)
-- 📱 Responsive UI with React & Bootstrap 5
+- Create & manage invoices with client & item details
+-  Choose from multiple beautiful invoice templates
+-  Live invoice preview before saving or sending
+-  Export invoices as PDF using jsPDF + html2canvas
+-  Send invoices directly via email (SMTP Brevo)
+-  Upload logos and images with Cloudinary integration
+-  Secure login/signup via Clerk Authentication
+-  Save, edit, reuse, and delete invoices (MongoDB backend)
+-  Responsive UI with React & Bootstrap 5
 
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 | Layer      | Technology                                        |
 |------------|-------------------------------------------------|
@@ -27,7 +27,7 @@ Create, preview, export, and send professional invoices effortlessly with this f
 | Email      | SMTP Relay (Brevo)                               |
 
 
-## ⚙️ Quick Setup
+##  Quick Setup
 
 ### 1. Backend (Spring Boot)
 
@@ -85,19 +85,19 @@ npm run dev
 ```
 
 
-## 🔗 Usage Flow
+##  Usage Flow
 
-1. Open landing page & signup/login 🧑‍💻
-2. Create invoices with custom details ✍️
-3. Choose a template & preview live 🎨
-4. Export PDF or email invoices directly 📧
-5. Manage saved invoices anytime 🗂️
+1. Open landing page & signup/login 
+2. Create invoices with custom details 
+3. Choose a template & preview live 
+4. Export PDF or email invoices directly 
+5. Manage saved invoices anytime 
 
-## 💡 Pro Tips
+##  Pro Tips
 
 - Use ngrok for local backend public URLs if needed
 - Keep all sensitive keys in environment variables
 - Customize invoice templates easily under `/src/templates`
 
 
-> Made with ❤️ to gear up.
+> Made to gear up.
